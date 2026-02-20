@@ -1,0 +1,2025 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merchant Onboarding — KYC Verification</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0d1b2a;
+    --navy-light: #1a2d42;
+    --teal: #00c9a7;
+    --teal-dim: rgba(0,201,167,0.12);
+    --teal-glow: rgba(0,201,167,0.3);
+    --white: #ffffff;
+    --surface: #f4f7fb;
+    --surface-card: #ffffff;
+    --border: #e2e8f0;
+    --border-active: #00c9a7;
+    --text-primary: #0d1b2a;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --error: #ef4444;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-active: 0 0 0 3px var(--teal-glow), 0 4px 20px rgba(0,0,0,0.08);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ── Top Bar ── */
+  .topbar {
+    background: var(--navy);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topbar-logo span {
+    color: var(--teal);
+  }
+  .topbar-badge {
+    background: var(--teal-dim);
+    border: 1px solid var(--teal-glow);
+    color: var(--teal);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  .topbar-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--teal-dim);
+    border: 2px solid var(--teal-glow);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--teal);
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+
+  /* ── Progress Header ── */
+  .progress-header {
+    background: var(--navy-light);
+    padding: 1.4rem 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .progress-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .progress-label {
+    font-family: 'Syne', sans-serif;
+    color: var(--white);
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+  .progress-pct {
+    color: var(--teal);
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .progress-steps {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    cursor: default;
+  }
+  .ps-bar {
+    height: 4px;
+    border-radius: 2px;
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.5s ease;
+  }
+  .ps-bar.done { background: var(--teal); }
+  .ps-bar.active { background: linear-gradient(90deg, var(--teal), rgba(0,201,167,0.4)); animation: shimmer 1.5s infinite; }
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  .ps-label {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .progress-step.done .ps-label,
+  .progress-step.active .ps-label { color: rgba(255,255,255,0.8); }
+
+  /* ── Layout ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    max-width: 1140px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ── Sidebar Steps ── */
+  .sidebar {
+    padding-right: 2rem;
+  }
+  .sidebar-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+  .step-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+  }
+  .step-nav::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: var(--border);
+    z-index: 0;
+  }
+  .step-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: background 0.2s;
+  }
+  .step-nav-item.locked { cursor: not-allowed; opacity: 0.5; }
+  .step-nav-item.active { background: var(--teal-dim); }
+  .step-nav-item:not(.locked):not(.active):hover { background: rgba(0,0,0,0.04); }
+  .sni-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--white);
+    flex-shrink: 0;
+    transition: all 0.3s;
+    font-size: 1rem;
+  }
+  .step-nav-item.active .sni-icon {
+    background: var(--navy);
+    border-color: var(--teal);
+    box-shadow: 0 0 0 4px var(--teal-dim);
+    color: var(--teal);
+  }
+  .step-nav-item.done .sni-icon {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: white;
+  }
+  .sni-text { line-height: 1.2; }
+  .sni-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .step-nav-item.locked .sni-name { color: var(--text-muted); }
+  .step-nav-item.active .sni-name { color: var(--navy); }
+  .sni-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .sni-lock {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Main Content ── */
+  .main-content { min-width: 0; }
+
+  .step-panel {
+    display: none;
+    animation: fadeSlideIn 0.4s ease;
+  }
+  .step-panel.active { display: block; }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: var(--surface-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+  .card-header {
+    padding: 1.75rem 2rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .card-header-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+  .card-header-text h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+  }
+  .card-header-text p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .card-body { padding: 1.75rem 2rem; }
+  .card-body.no-pad { padding: 0; }
+
+  /* Trust badges */
+  .trust-bar {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #f8fafd;
+    border-top: 1px solid var(--border);
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+  .trust-item .ti-icon { font-size: 1rem; }
+  .trust-item.green .ti-icon { color: var(--success); }
+  .trust-item.blue .ti-icon { color: #3b82f6; }
+
+  /* ── Form Fields ── */
+  .form-row {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+  .field-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+  }
+  .field-label .required { color: var(--error); margin-left: 2px; }
+  .field-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .field-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted);
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .field-input, .field-select, .field-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+  .field-input.has-icon { padding-left: 38px; }
+  .field-input:focus, .field-select:focus, .field-textarea:focus {
+    border-color: var(--teal);
+    background: var(--white);
+    box-shadow: 0 0 0 3px var(--teal-dim);
+  }
+  .field-input.error, .field-select.error { border-color: var(--error); }
+  .field-input.success { border-color: var(--success); }
+  .field-input.verifying { border-color: var(--warning); }
+  .field-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  .field-hint.error-hint { color: var(--error); }
+  .field-status {
+    position: absolute;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .field-status.verifying { color: var(--warning); }
+  .field-status.verified { color: var(--success); }
+  .field-status.error-status { color: var(--error); }
+
+  /* PAN Verify button within field */
+  .field-action-btn {
+    position: absolute;
+    right: 8px;
+    padding: 5px 14px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .field-action-btn:hover { background: #1a3050; }
+  .field-action-btn:active { transform: scale(0.97); }
+  .field-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .field-input.has-btn { padding-right: 90px; }
+
+  /* File Upload */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--surface);
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--teal);
+    background: var(--teal-dim);
+  }
+  .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+  .upload-text { font-size: 0.85rem; color: var(--text-secondary); }
+  .upload-text strong { color: var(--teal); cursor: pointer; }
+  .upload-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+  .upload-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--teal-dim);
+    border: 1px solid var(--teal-glow);
+    border-radius: var(--radius-sm);
+    margin-top: 8px;
+    font-size: 0.82rem;
+  }
+  .upload-preview .up-name { color: var(--navy); font-weight: 600; flex: 1; }
+  .upload-preview .up-remove {
+    color: var(--error);
+    cursor: pointer;
+    font-size: 1rem;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+  }
+
+  /* Radio/Checkbox */
+  .radio-group, .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .radio-group.inline, .checkbox-group.inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .radio-option, .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--surface);
+    flex: 1;
+    min-width: 140px;
+  }
+  .radio-option:hover, .checkbox-option:hover { border-color: var(--teal); }
+  .radio-option.selected, .checkbox-option.selected {
+    border-color: var(--teal);
+    background: var(--teal-dim);
+  }
+  .radio-option input, .checkbox-option input { display: none; }
+  .ro-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .radio-option.selected .ro-dot {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: inset 0 0 0 3px white;
+  }
+  .co-check {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    color: white;
+    transition: all 0.2s;
+  }
+  .checkbox-option.selected .co-check {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+  .ro-label { font-size: 0.85rem; font-weight: 500; }
+
+  /* Director card repeatable */
+  .director-cards { display: flex; flex-direction: column; gap: 1rem; }
+  .director-card {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .director-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .dch-left { display: flex; align-items: center; gap: 10px; }
+  .dch-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dch-title { font-size: 0.88rem; font-weight: 600; }
+  .dch-toggle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+  }
+  .dch-toggle.open { transform: rotate(180deg); }
+  .director-card-body { padding: 1.25rem; display: none; }
+  .director-card-body.open { display: block; }
+  .remove-director {
+    padding: 6px 12px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: var(--error);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .remove-director:hover { background: #fef2f2; border-color: var(--error); }
+
+  .add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: none;
+    border: 1.5px dashed var(--teal-glow);
+    border-radius: var(--radius-sm);
+    color: var(--teal);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+    transition: all 0.2s;
+    margin-top: 1rem;
+  }
+  .add-btn:hover { background: var(--teal-dim); border-style: solid; }
+
+  /* OTP */
+  .otp-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .otp-input {
+    width: 48px; height: 52px;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    outline: none;
+    transition: all 0.2s;
+    color: var(--navy);
+  }
+  .otp-input:focus {
+    border-color: var(--teal);
+    background: white;
+    box-shadow: 0 0 0 3px var(--teal-dim);
+  }
+  .otp-sep { color: var(--text-muted); font-size: 1.2rem; }
+
+  /* Alert boxes */
+  .alert {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.83rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+  }
+  .alert.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+  .alert.warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .alert.success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+
+  /* Section divider */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Bottom CTA */
+  .step-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1.5rem;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 26px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: white;
+  }
+  .btn-primary:hover { background: #1a3050; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(13,27,42,0.3); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--text-secondary); }
+  .btn-teal {
+    background: var(--teal);
+    color: var(--navy);
+  }
+  .btn-teal:hover { background: #00b396; transform: translateY(-1px); box-shadow: 0 4px 12px var(--teal-glow); }
+
+  /* Step 3 - locked state */
+  .locked-step-card {
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 3rem;
+    text-align: center;
+    background: var(--surface);
+  }
+  .locked-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .locked-step-card h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 8px; }
+  .locked-step-card p { font-size: 0.85rem; color: var(--text-muted); }
+
+  /* Bank Step */
+  .bank-logo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+  .bank-logo {
+    padding: 12px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    background: var(--surface);
+  }
+  .bank-logo.selected { border-color: var(--teal); background: var(--teal-dim); color: var(--navy); }
+  .bank-logo:hover:not(.selected) { border-color: var(--text-muted); }
+  .bank-logo .bl-icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+
+  /* Tooltip */
+  .tooltip-wrap { position: relative; display: inline-flex; }
+  .tooltip-icon {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: help;
+    margin-left: 4px;
+  }
+  .tooltip-tip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--navy);
+    color: white;
+    font-size: 0.72rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 20;
+  }
+  .tooltip-wrap:hover .tooltip-tip { opacity: 1; }
+
+  /* Success overlay */
+  .success-card {
+    padding: 3rem;
+    text-align: center;
+  }
+  .success-anim {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--teal-dim);
+    border: 3px solid var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 1.5rem;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .success-card h2 { font-family: 'Syne', sans-serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 10px; }
+  .success-card p { color: var(--text-secondary); font-size: 0.9rem; max-width: 400px; margin: 0 auto 1.5rem; }
+  .ref-number {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+  @media (max-width: 640px) {
+    .form-row.cols-2, .form-row.cols-3 { grid-template-columns: 1fr; }
+    .bank-logo-grid { grid-template-columns: repeat(2, 1fr); }
+    .card-header { flex-direction: column; gap: 0.75rem; }
+    .card-body { padding: 1.25rem; }
+    .topbar { padding: 0 1rem; }
+    .topbar-right { display: none; }
+  }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  .spinner.dark {
+    border-color: rgba(0,0,0,0.15);
+    border-top-color: var(--navy);
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <img src="img5.png">
+  </div>
+  <div class="topbar-badge">KYC Onboarding</div>
+  <div class="topbar-right">
+    <span id="topbar-save-status" style="color:var(--text-muted);font-size:0.8rem"></span>
+    <div class="topbar-avatar">MR</div>
+  </div>
+</header>
+
+<!-- Progress -->
+<div class="progress-header">
+  <div class="progress-meta">
+    <span class="progress-label">Merchant Verification</span>
+    <span class="progress-pct" id="overall-pct">0% complete</span>
+  </div>
+  <div class="progress-steps">
+    <div class="progress-step active" id="pstep-0">
+      <div class="ps-bar active"></div>
+      <span class="ps-label">Business ID</span>
+    </div>
+    <div class="progress-step" id="pstep-1">
+      <div class="ps-bar"></div>
+      <span class="ps-label">Aadhaar KYC</span>
+    </div>
+    <div class="progress-step" id="pstep-2">
+      <div class="ps-bar"></div>
+      <span class="ps-label">Directors</span>
+    </div>
+    <div class="progress-step" id="pstep-3">
+      <div class="ps-bar"></div>
+      <span class="ps-label">Bank Details</span>
+    </div>
+  </div>
+</div>
+
+<!-- Layout -->
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Verification Steps</div>
+    <nav class="step-nav">
+      <div class="step-nav-item active" data-step="0" onclick="goToStep(0)">
+        <div class="sni-icon">🏢</div>
+        <div class="sni-text">
+          <div class="sni-name">Business Identity</div>
+          <div class="sni-sub">PAN + Business details</div>
+        </div>
+      </div>
+      <div class="step-nav-item locked" data-step="1" id="nav-1">
+        <div class="sni-icon">🪪</div>
+        <div class="sni-text">
+          <div class="sni-name">Aadhaar Verification</div>
+          <div class="sni-sub">Identity proof</div>
+        </div>
+        <span class="sni-lock">🔒</span>
+      </div>
+      <div class="step-nav-item locked" data-step="2" id="nav-2">
+        <div class="sni-icon">👥</div>
+        <div class="sni-text">
+          <div class="sni-name">Directors & UBOs</div>
+          <div class="sni-sub">Key personnel</div>
+        </div>
+        <span class="sni-lock">🔒</span>
+      </div>
+      <div class="step-nav-item locked" data-step="3" id="nav-3">
+        <div class="sni-icon">🏦</div>
+        <div class="sni-text">
+          <div class="sni-name">Bank Details</div>
+          <div class="sni-sub">Settlement account</div>
+        </div>
+        <span class="sni-lock">🔒</span>
+      </div>
+    </nav>
+
+    <div style="margin-top:2rem;padding:1rem;background:#f8fafd;border-radius:10px;border:1px solid var(--border);">
+      <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Support</div>
+      <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Facing issues? <a href="#" style="color:var(--teal);font-weight:600;text-decoration:none;">Chat with us</a> or call <strong style="color:var(--navy);">1800-123-4567</strong></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- ═══ STEP 0: Business Identity ═══ -->
+    <div class="step-panel active" id="step-0">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🏢</div>
+          <div class="card-header-text">
+            <h2>Business Identity</h2>
+            <p>Verify your business PAN and provide registration details. This is required by RBI KYC norms.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="alert info">
+            <span>ℹ️</span>
+            <span><strong>Sole proprietors & freelancers</strong> — please enter your <strong>personal PAN number</strong> and select "Individual / Sole Proprietor" as business type.</span>
+          </div>
+
+          <div class="section-title">PAN Verification</div>
+
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label">
+                Business PAN Number <span class="required">*</span>
+                <span class="tooltip-wrap">
+                  <span class="tooltip-icon">?</span>
+                  <span class="tooltip-tip">10-character alphanumeric issued by Income Tax Dept.</span>
+                </span>
+              </label>
+              <div class="field-wrap">
+                <input type="text" id="pan-input" class="field-input has-btn" placeholder="AABCS1234H" maxlength="10" oninput="onFieldInput('pan_number', this)" onfocus="onFieldFocus('pan_number', this)" onblur="onFieldBlur('pan_number', this)" style="text-transform:uppercase;letter-spacing:0.08em;">
+                <button class="field-action-btn" id="pan-verify-btn" onclick="verifyPAN()" disabled>Verify</button>
+              </div>
+              <span class="field-hint" id="pan-hint">Enter your 10-character PAN number</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Entity Name (as per PAN) <span class="required">*</span></label>
+              <div class="field-wrap">
+                <input type="text" id="entity-name" class="field-input" placeholder="Auto-populated after PAN verify" readonly onfocus="onFieldFocus('entity_name', this)" onblur="onFieldBlur('entity_name', this)">
+                <span class="field-status" id="entity-status"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top:1.5rem">Business Details</div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">Business Type <span class="required">*</span></label>
+              <div class="radio-group inline" id="business-type-group">
+                <label class="radio-option" onclick="selectRadio('business_type', 'private_ltd', this)">
+                  <input type="radio" name="btype" value="private_ltd">
+                  <span class="ro-dot"></span>
+                  <span class="ro-label">Pvt. Ltd.</span>
+                </label>
+                <label class="radio-option" onclick="selectRadio('business_type', 'llp', this)">
+                  <input type="radio" name="btype" value="llp">
+                  <span class="ro-dot"></span>
+                  <span class="ro-label">LLP</span>
+                </label>
+                <label class="radio-option" onclick="selectRadio('business_type', 'partnership', this)">
+                  <input type="radio" name="btype" value="partnership">
+                  <span class="ro-dot"></span>
+                  <span class="ro-label">Partnership</span>
+                </label>
+                <label class="radio-option" onclick="selectRadio('business_type', 'individual', this)">
+                  <input type="radio" name="btype" value="individual">
+                  <span class="ro-dot"></span>
+                  <span class="ro-label">Individual</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">GST Number <span class="required">*</span></label>
+              <div class="field-wrap">
+                <input type="text" id="gst-input" class="field-input" placeholder="22AABCS1234H1Z5" maxlength="15" oninput="onFieldInput('gst_number', this)" onfocus="onFieldFocus('gst_number', this)" onblur="onFieldBlur('gst_number', this)" style="text-transform:uppercase;letter-spacing:0.04em;">
+                <span class="field-status" id="gst-status"></span>
+              </div>
+              <span class="field-hint" id="gst-hint">15-character GST identification number</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label">CIN / LLPIN (if applicable)</label>
+              <div class="field-wrap">
+                <input type="text" class="field-input" placeholder="U74999DL2020PTC12345" oninput="onFieldInput('cin_number', this)" onfocus="onFieldFocus('cin_number', this)" onblur="onFieldBlur('cin_number', this)">
+              </div>
+              <span class="field-hint">Company Identification Number from MCA</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label">Registered Business Address <span class="required">*</span></label>
+              <textarea class="field-textarea" rows="2" placeholder="Flat / Building No., Street, Area" oninput="onFieldInput('registered_address', this)" onfocus="onFieldFocus('registered_address', this)" onblur="onFieldBlur('registered_address', this)" style="resize:vertical;"></textarea>
+            </div>
+          </div>
+
+          <div class="form-row cols-3">
+            <div class="field-group">
+              <label class="field-label">City <span class="required">*</span></label>
+              <input type="text" class="field-input" placeholder="Mumbai" oninput="onFieldInput('city', this)" onfocus="onFieldFocus('city', this)" onblur="onFieldBlur('city', this)">
+            </div>
+            <div class="field-group">
+              <label class="field-label">State <span class="required">*</span></label>
+              <select class="field-select" onchange="onFieldInput('state', this)" onfocus="onFieldFocus('state', this)" onblur="onFieldBlur('state', this)">
+                <option value="">Select State</option>
+                <option>Maharashtra</option><option>Delhi</option><option>Karnataka</option>
+                <option>Tamil Nadu</option><option>Gujarat</option><option>Telangana</option>
+                <option>West Bengal</option><option>Rajasthan</option><option>Uttar Pradesh</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">PIN Code <span class="required">*</span></label>
+              <input type="text" class="field-input" placeholder="400001" maxlength="6" oninput="onFieldInput('pincode', this)" onfocus="onFieldFocus('pincode', this)" onblur="onFieldBlur('pincode', this)">
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top:1.5rem">Documents</div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">Certificate of Incorporation <span class="required">*</span></label>
+              <div class="upload-zone" id="coi-zone" ondragover="dragOver(event,'coi-zone')" ondragleave="dragLeave('coi-zone')" ondrop="dropFile(event,'coi-zone','certificate_of_incorporation')">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="fileSelected(this,'coi-zone','certificate_of_incorporation')">
+                <div class="upload-icon">📄</div>
+                <div class="upload-text"><strong>Click to upload</strong> or drag & drop</div>
+                <div class="upload-sub">PDF, JPG, PNG — Max 5MB</div>
+              </div>
+              <div id="coi-preview" style="display:none"></div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Address Proof <span class="required">*</span></label>
+              <div class="upload-zone" id="addr-zone" ondragover="dragOver(event,'addr-zone')" ondragleave="dragLeave('addr-zone')" ondrop="dropFile(event,'addr-zone','address_proof')">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="fileSelected(this,'addr-zone','address_proof')">
+                <div class="upload-icon">🏠</div>
+                <div class="upload-text"><strong>Click to upload</strong> or drag & drop</div>
+                <div class="upload-sub">Utility bill, bank statement (last 3 months)</div>
+              </div>
+              <div id="addr-preview" style="display:none"></div>
+            </div>
+          </div>
+
+          <div class="step-footer">
+            <div style="display:flex;align-items:center;gap:12px;font-size:0.8rem;color:var(--text-muted);">
+              <span>🔒</span> Data encrypted & RBI-KYC compliant
+            </div>
+            <button class="btn btn-primary" onclick="completeStep(0)">
+              Continue to Aadhaar <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 1: Aadhaar Verification ═══ -->
+    <div class="step-panel" id="step-1">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🪪</div>
+          <div class="card-header-text">
+            <h2>Aadhaar Verification</h2>
+            <p>Verify the identity of the authorized signatory via Aadhaar OTP. Your data is used only for KYC purposes.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="alert warn">
+            <span>⚠️</span>
+            <span>Aadhaar details are used <strong>only</strong> for identity verification and never stored on our servers. Compliant with UIDAI guidelines.</span>
+          </div>
+
+          <div class="section-title">Authorized Signatory Details</div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">Full Name (as on Aadhaar) <span class="required">*</span></label>
+              <input type="text" class="field-input" placeholder="Rajesh Kumar Sharma" oninput="onFieldInput('aadhaar_full_name', this)" onfocus="onFieldFocus('aadhaar_full_name', this)" onblur="onFieldBlur('aadhaar_full_name', this)">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Date of Birth <span class="required">*</span></label>
+              <input type="date" class="field-input" onchange="onFieldInput('aadhaar_dob', this)" onfocus="onFieldFocus('aadhaar_dob', this)" onblur="onFieldBlur('aadhaar_dob', this)">
+            </div>
+          </div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">Aadhaar Number <span class="required">*</span></label>
+              <div class="field-wrap">
+                <input type="text" id="aadhaar-input" class="field-input has-btn" placeholder="XXXX XXXX XXXX" maxlength="14" oninput="formatAadhaar(this)" onfocus="onFieldFocus('aadhaar_number', this)" onblur="onFieldBlur('aadhaar_number', this)">
+                <button class="field-action-btn" id="aadhaar-otp-btn" onclick="sendAadhaarOTP()" disabled>Send OTP</button>
+              </div>
+              <span class="field-hint" id="aadhaar-hint">12-digit Aadhaar number</span>
+            </div>
+            <div class="field-group" id="otp-section" style="display:none">
+              <label class="field-label">Enter OTP <span class="required">*</span></label>
+              <div class="otp-group" id="otp-inputs">
+                <input type="text" class="otp-input" maxlength="1" oninput="otpMove(this, 0)" onkeydown="otpBack(event, 0)">
+                <input type="text" class="otp-input" maxlength="1" oninput="otpMove(this, 1)" onkeydown="otpBack(event, 1)">
+                <input type="text" class="otp-input" maxlength="1" oninput="otpMove(this, 2)" onkeydown="otpBack(event, 2)">
+                <span class="otp-sep">—</span>
+                <input type="text" class="otp-input" maxlength="1" oninput="otpMove(this, 3)" onkeydown="otpBack(event, 3)">
+                <input type="text" class="otp-input" maxlength="1" oninput="otpMove(this, 4)" onkeydown="otpBack(event, 4)">
+                <input type="text" class="otp-input" maxlength="1" oninput="otpMove(this, 5)" onkeydown="otpBack(event, 5)">
+              </div>
+              <span class="field-hint">OTP sent to Aadhaar-linked mobile. <a href="#" onclick="sendAadhaarOTP();return false;" style="color:var(--teal);font-weight:600;">Resend</a></span>
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top:1.5rem">Additional Documents</div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">Aadhaar Front <span class="required">*</span></label>
+              <div class="upload-zone" id="aadh-f-zone" ondrop="dropFile(event,'aadh-f-zone','aadhaar_front')" ondragover="dragOver(event,'aadh-f-zone')" ondragleave="dragLeave('aadh-f-zone')">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="fileSelected(this,'aadh-f-zone','aadhaar_front')">
+                <div class="upload-icon">🪪</div>
+                <div class="upload-text"><strong>Click to upload</strong> Aadhaar front</div>
+                <div class="upload-sub">Clear photo — JPG, PNG, PDF</div>
+              </div>
+              <div id="aadh-f-preview" style="display:none"></div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Aadhaar Back <span class="required">*</span></label>
+              <div class="upload-zone" id="aadh-b-zone" ondrop="dropFile(event,'aadh-b-zone','aadhaar_back')" ondragover="dragOver(event,'aadh-b-zone')" ondragleave="dragLeave('aadh-b-zone')">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="fileSelected(this,'aadh-b-zone','aadhaar_back')">
+                <div class="upload-icon">🪪</div>
+                <div class="upload-text"><strong>Click to upload</strong> Aadhaar back</div>
+                <div class="upload-sub">Clear photo — JPG, PNG, PDF</div>
+              </div>
+              <div id="aadh-b-preview" style="display:none"></div>
+            </div>
+          </div>
+
+          <div class="step-footer">
+            <button class="btn btn-secondary" onclick="goToStep(0)">← Back</button>
+            <button class="btn btn-primary" onclick="completeStep(1)">Continue to Directors →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 2: Directors & UBOs ═══ -->
+    <div class="step-panel" id="step-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">👥</div>
+          <div class="card-header-text">
+            <h2>Directors, UBOs & Key Personnel</h2>
+            <p>Add all directors and any Ultimate Beneficial Owners (UBO) holding ≥ 25% stake. Required for PMLA compliance.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="alert info">
+            <span>📋</span>
+            <span><strong>UBO Rule:</strong> Any individual owning or controlling ≥ 25% of shares/voting rights must be declared as a UBO as per PMLA Act 2002.</span>
+          </div>
+
+          <div class="director-cards" id="director-list">
+            <!-- Directors injected by JS -->
+          </div>
+
+          <button class="add-btn" onclick="addDirector()">
+            <span>＋</span> Add Director / UBO
+          </button>
+
+          <div class="section-title" style="margin-top:1.5rem">Shareholding Declaration</div>
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">Total Number of Shareholders</label>
+              <input type="number" class="field-input" placeholder="e.g. 4" min="1" oninput="onFieldInput('total_shareholders', this)" onfocus="onFieldFocus('total_shareholders', this)" onblur="onFieldBlur('total_shareholders', this)">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Date of Incorporation <span class="required">*</span></label>
+              <input type="date" class="field-input" onchange="onFieldInput('date_of_incorporation', this)" onfocus="onFieldFocus('date_of_incorporation', this)" onblur="onFieldBlur('date_of_incorporation', this)">
+            </div>
+          </div>
+
+          <div class="step-footer">
+            <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+            <button class="btn btn-primary" onclick="completeStep(2)">Continue to Bank →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 3: Bank Details ═══ -->
+    <div class="step-panel" id="step-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🏦</div>
+          <div class="card-header-text">
+            <h2>Company Bank Details</h2>
+            <p>Provide your settlement bank account. A ₹1 penny drop verification will be performed automatically.</p>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <div class="section-title">Select Your Bank</div>
+          <div class="bank-logo-grid" id="bank-grid">
+            <div class="bank-logo" onclick="selectBank('hdfc', this)"><span class="bl-icon">🏦</span>HDFC</div>
+            <div class="bank-logo" onclick="selectBank('sbi', this)"><span class="bl-icon">🏦</span>SBI</div>
+            <div class="bank-logo" onclick="selectBank('icici', this)"><span class="bl-icon">🏦</span>ICICI</div>
+            <div class="bank-logo" onclick="selectBank('axis', this)"><span class="bl-icon">🏦</span>Axis</div>
+            <div class="bank-logo" onclick="selectBank('kotak', this)"><span class="bl-icon">🏦</span>Kotak</div>
+            <div class="bank-logo" onclick="selectBank('yes', this)"><span class="bl-icon">🏦</span>Yes Bank</div>
+            <div class="bank-logo" onclick="selectBank('pnb', this)"><span class="bl-icon">🏦</span>PNB</div>
+            <div class="bank-logo" onclick="selectBank('other', this)"><span class="bl-icon">🔍</span>Other</div>
+          </div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">Account Holder Name <span class="required">*</span></label>
+              <input type="text" class="field-input" placeholder="As per bank records" id="acc-name" oninput="onFieldInput('bank_account_holder_name', this)" onfocus="onFieldFocus('bank_account_holder_name', this)" onblur="onFieldBlur('bank_account_holder_name', this)">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Account Type <span class="required">*</span></label>
+              <select class="field-select" onchange="onFieldInput('bank_account_type', this)" onfocus="onFieldFocus('bank_account_type', this)" onblur="onFieldBlur('bank_account_type', this)">
+                <option value="">Select type</option>
+                <option value="current">Current Account</option>
+                <option value="savings">Savings Account</option>
+                <option value="cc">Cash Credit</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">Account Number <span class="required">*</span></label>
+              <div class="field-wrap">
+                <input type="text" id="acc-num" class="field-input" placeholder="0001234567890" oninput="onFieldInput('bank_account_number', this)" onfocus="onFieldFocus('bank_account_number', this)" onblur="onFieldBlur('bank_account_number', this)" style="letter-spacing:0.05em;">
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Confirm Account Number <span class="required">*</span></label>
+              <input type="text" class="field-input" placeholder="Re-enter account number" oninput="onFieldInput('bank_account_number_confirm', this)" onfocus="onFieldFocus('bank_account_number_confirm', this)" onblur="onFieldBlur('bank_account_number_confirm', this)">
+            </div>
+          </div>
+
+          <div class="form-row cols-2">
+            <div class="field-group">
+              <label class="field-label">IFSC Code <span class="required">*</span></label>
+              <div class="field-wrap">
+                <input type="text" id="ifsc-input" class="field-input has-btn" placeholder="HDFC0001234" maxlength="11" oninput="onIFSCInput(this)" onfocus="onFieldFocus('bank_ifsc_code', this)" onblur="onFieldBlur('bank_ifsc_code', this)" style="text-transform:uppercase;letter-spacing:0.05em;">
+                <button class="field-action-btn" id="ifsc-verify-btn" onclick="verifyIFSC()" disabled>Lookup</button>
+              </div>
+              <span class="field-hint" id="ifsc-hint">11-character IFSC code</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Branch Name</label>
+              <input type="text" id="branch-name" class="field-input" placeholder="Auto-filled from IFSC" readonly>
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top:1.5rem">Cancelled Cheque</div>
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label">Upload Cancelled Cheque / Bank Statement <span class="required">*</span></label>
+              <div class="upload-zone" id="cheque-zone" ondrop="dropFile(event,'cheque-zone','cancelled_cheque')" ondragover="dragOver(event,'cheque-zone')" ondragleave="dragLeave('cheque-zone')">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="fileSelected(this,'cheque-zone','cancelled_cheque')">
+                <div class="upload-icon">🧾</div>
+                <div class="upload-text"><strong>Click to upload</strong> cancelled cheque or bank statement</div>
+                <div class="upload-sub">PDF, JPG, PNG — Max 5MB</div>
+              </div>
+              <div id="cheque-preview" style="display:none"></div>
+            </div>
+          </div>
+
+          <div class="step-footer">
+            <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+            <button class="btn btn-teal" onclick="submitKYC()">
+              ✅ Submit KYC Application
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 4: Success ═══ -->
+    <div class="step-panel" id="step-4">
+      <div class="card">
+        <div class="success-card">
+          <div class="success-anim">✅</div>
+          <h2>KYC Application Submitted!</h2>
+          <p>Your merchant verification is under review. Our team will verify your documents and activate your account within 2–4 business hours.</p>
+          <div class="ref-number">
+            📋 Ref: <span id="ref-id">MRC-2026-00000</span>
+          </div>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="window.location.reload()">Start New Application</button>
+            <button class="btn btn-secondary" onclick="window.print()">Download Summary</button>
+            <a href="index.html" class="btn btn-secondary">Home</a>
+          </div>
+        </div>
+        <div class="trust-bar" style="justify-content:center;">
+          <div class="trust-item green"><span class="ti-icon">🔒</span> Encrypted & Secure</div>
+          <div class="trust-item blue"><span class="ti-icon">✅</span> RBI KYC Compliant</div>
+          <div class="trust-item green"><span class="ti-icon">🛡️</span> PMLA Compliant</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     Twilio Segment Integration + App Logic
+══════════════════════════════════════════════ -->
+<script>
+/* ────────────────────────────────────────────
+   Twilio Segment Snippet
+──────────────────────────────────────────── */
+!function(){
+  var analytics=window.analytics=window.analytics||[];
+  if(!analytics.initialize)if(analytics.invoked){
+    window.console&&console.error&&console.error("Segment snippet included twice.");
+  } else {
+    analytics.invoked=!0;
+    analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];
+    analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};
+    for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key);}
+    analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e;};
+    analytics.SNIPPET_VERSION="4.15.3";
+    analytics.load("suzg9Ck5EW9xT65CXpm456ObsF3r3K31"); 
+  }
+}();
+
+/* ────────────────────────────────────────────
+   App State
+──────────────────────────────────────────── */
+const state = {
+  currentStep: 0,
+  completedSteps: new Set(),
+  fieldFocusTimestamps: {},
+  fieldValueAtFocus: {},
+  formData: {},
+  directorCount: 1,
+  selectedBank: null,
+  panVerified: false,
+  aadhaarOTPSent: false,
+  userEmail: null,
+  userName: null,
+  _otpCompleteTracked: false,
+};
+
+/* ────────────────────────────────────────────
+   SESSION LINKING + PAGE VIEW
+──────────────────────────────────────────── */
+analytics.ready(function() {
+  const sessionEmail = localStorage.getItem('user_email');
+  const sessionName  = localStorage.getItem('user_name');
+
+  if (sessionEmail) {
+    state.userEmail = sessionEmail;
+    state.userName  = sessionName || null;
+
+    analytics.identify({
+      email: sessionEmail,
+      ...(sessionName && { name: sessionName }),
+      kyc_form_started: true,
+      kyc_form_started_at: new Date().toISOString(),
+    });
+
+    const avatarEl = document.querySelector('.topbar-avatar');
+    if (avatarEl && sessionName) {
+      avatarEl.textContent = sessionName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    }
+  } else {
+    console.warn('[Segment] No user_email found. Events will fire under anonymousId.');
+  }
+
+  // Page view fires here — guaranteed Segment is loaded
+  analytics.page('Merchant Onboarding', {
+    email:       state.userEmail || null,
+    user_name:   state.userName  || null,
+    step_number: 1,
+    step_name:   'Business Identity',
+    total_steps: 4,
+    timestamp:   new Date().toISOString(),
+  });
+
+  segTrack('Merchant Onboarding Started', {
+    step_number: 1,
+    step_name:   'Business Identity',
+    total_steps: 4,
+  });
+});
+
+/* ────────────────────────────────────────────
+   segTrack — CENTRAL WRAPPER
+   ✅ THE FIX IS HERE: calls analytics.track()
+   The broken version called segTrack() itself
+   causing infinite recursion → stack overflow
+   → entire page JS crashed silently
+──────────────────────────────────────────── */
+function segTrack(eventName, properties) {
+  const enriched = Object.assign({}, properties, {
+    email:     state.userEmail || null,
+    user_name: state.userName  || null,
+    form_name: (properties && properties.form_name) || 'merchant_kyc_onboarding',
+  });
+  analytics.track(eventName, enriched); // ✅ analytics.track — NOT segTrack
+}
+
+/* ────────────────────────────────────────────
+   FIELD EVENT MAP
+──────────────────────────────────────────── */
+const FIELD_EVENT_MAP = {
+  'pan_number':                  'PAN Number Entered',
+  'entity_name':                 'Entity Name Confirmed',
+  'business_type':               'Business Type Selected',
+  'gst_number':                  'GST Number Entered',
+  'cin_number':                  'CIN Number Entered',
+  'registered_address':          'Registered Address Entered',
+  'city':                        'City Entered',
+  'state':                       'State Selected',
+  'pincode':                     'PIN Code Entered',
+  'aadhaar_full_name':           'Authorised Signatory Name Entered',
+  'aadhaar_dob':                 'Date of Birth Entered',
+  'aadhaar_number':              'Aadhaar Number Entered',
+  'total_shareholders':          'Total Shareholders Entered',
+  'date_of_incorporation':       'Date of Incorporation Entered',
+  'bank_account_holder_name':    'Bank Account Holder Name Entered',
+  'bank_account_type':           'Bank Account Type Selected',
+  'bank_account_number':         'Bank Account Number Entered',
+  'bank_account_number_confirm': 'Bank Account Number Confirmed',
+  'bank_ifsc_code':              'Bank IFSC Code Entered',
+};
+
+for (let d = 1; d <= 10; d++) {
+  FIELD_EVENT_MAP[`director_${d}_name`]             = `Director ${d} Name Entered`;
+  FIELD_EVENT_MAP[`director_${d}_designation`]      = `Director ${d} Designation Selected`;
+  FIELD_EVENT_MAP[`director_${d}_din`]              = `Director ${d} DIN Entered`;
+  FIELD_EVENT_MAP[`director_${d}_shareholding_pct`] = `Director ${d} Shareholding % Entered`;
+  FIELD_EVENT_MAP[`director_${d}_is_ubo`]           = `Director ${d} UBO Status Selected`;
+  FIELD_EVENT_MAP[`director_${d}_pan`]              = `Director ${d} PAN Entered`;
+  FIELD_EVENT_MAP[`director_${d}_aadhaar_last4`]    = `Director ${d} Aadhaar Last 4 Entered`;
+}
+
+/* ────────────────────────────────────────────
+   FIELD TRACKING
+──────────────────────────────────────────── */
+function onFieldFocus(fieldId, el) {
+  state.fieldFocusTimestamps[fieldId] = Date.now();
+  state.fieldValueAtFocus[fieldId] = el.value || '';
+}
+
+function onFieldBlur(fieldId, el) {
+  const val = el.value || '';
+  if (!val.trim()) return;
+  if (val === (state.fieldValueAtFocus[fieldId] || '')) return;
+
+  const focusedAt   = state.fieldFocusTimestamps[fieldId];
+  const timeOnField = focusedAt ? Math.round((Date.now() - focusedAt) / 1000) : null;
+  const eventName   = FIELD_EVENT_MAP[fieldId] || (fieldId.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' Entered');
+
+  segTrack(eventName, {
+    field_id:              fieldId,
+    step_number:           state.currentStep + 1,
+    step_name:             getStepName(state.currentStep),
+    char_count:            val.length,
+    time_on_field_seconds: timeOnField,
+  });
+}
+
+function onFieldInput(fieldId, el) {
+  state.formData[fieldId] = el.value;
+  updateSaveStatus();
+}
+
+/* ────────────────────────────────────────────
+   HELPERS
+──────────────────────────────────────────── */
+function getStepName(step) {
+  return ['Business Identity', 'Aadhaar Verification', 'Directors & UBOs', 'Bank Details'][step] || 'Unknown';
+}
+
+function updateSaveStatus() {
+  const el = document.getElementById('topbar-save-status');
+  if (!el) return;
+  el.textContent = 'Auto-saving...';
+  clearTimeout(window._saveTimeout);
+  window._saveTimeout = setTimeout(() => {
+    el.textContent = '✓ Draft saved';
+    setTimeout(() => { el.textContent = ''; }, 2000);
+  }, 800);
+}
+
+/* ────────────────────────────────────────────
+   STEP NAVIGATION
+──────────────────────────────────────────── */
+function _switchStep(step) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`step-${step}`).classList.add('active');
+
+  document.querySelectorAll('.step-nav-item').forEach((item, i) => {
+    item.classList.remove('active', 'locked', 'done');
+    if (state.completedSteps.has(i)) {
+      item.classList.add('done');
+      const lock = item.querySelector('.sni-lock');
+      if (lock) lock.remove();
+    } else if (i === step) {
+      item.classList.add('active');
+    } else if (!state.completedSteps.has(i - 1) && i !== 0) {
+      item.classList.add('locked');
+    }
+  });
+
+  document.querySelectorAll('.progress-step').forEach((ps, i) => {
+    const bar = ps.querySelector('.ps-bar');
+    ps.classList.remove('done', 'active');
+    bar.classList.remove('done', 'active');
+    if (state.completedSteps.has(i))  { ps.classList.add('done');   bar.classList.add('done'); }
+    else if (i === step)              { ps.classList.add('active'); bar.classList.add('active'); }
+  });
+
+  const pct = Math.round((state.completedSteps.size / 4) * 100);
+  document.getElementById('overall-pct').textContent = `${pct}% complete`;
+  state.currentStep = step;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToStep(step) {
+  if (step !== 0 && !state.completedSteps.has(step - 1) && !state.completedSteps.has(step)) return;
+
+  const prev        = state.currentStep;
+  const isGoingBack = step < prev;
+  _switchStep(step);
+
+  if (isGoingBack) {
+    const backNames = [null, 'Went Back to Business Identity', 'Went Back to Aadhaar Verification', 'Went Back to Directors & UBOs', 'Went Back to Bank Details'];
+    segTrack(backNames[step + 1] || `Went Back to ${getStepName(step)}`, {
+      from_step_number:        prev + 1,
+      from_step_name:          getStepName(prev),
+      to_step_number:          step + 1,
+      to_step_name:            getStepName(step),
+      fields_collected_so_far: Object.keys(state.formData).length,
+    });
+  } else {
+    segTrack('KYC Step Viewed', {
+      step_number:          step + 1,
+      step_name:            getStepName(step),
+      previous_step_number: prev + 1,
+      previous_step_name:   getStepName(prev),
+    });
+  }
+  _identifyCurrentTraits();
+}
+
+function completeStep(step) {
+  state.completedSteps.add(step);
+  const stepEvents = ['Business Identity Step Completed', 'Aadhaar Verification Step Completed', 'Directors & UBOs Step Completed', 'Bank Details Step Completed'];
+  segTrack(stepEvents[step] || `Step ${step + 1} Completed`, {
+    step_number:             step + 1,
+    step_name:               getStepName(step),
+    fields_collected_so_far: Object.keys(state.formData).length,
+    completion_pct:          Math.round(((step + 1) / 4) * 100),
+  });
+  _identifyCurrentTraits();
+  if (step < 3) goToStep(step + 1);
+}
+
+/* ────────────────────────────────────────────
+   UNIFIED IDENTIFY
+──────────────────────────────────────────── */
+function _identifyCurrentTraits() {
+  const fd = state.formData;
+  analytics.identify({
+    ...(state.userEmail && { email: state.userEmail }),
+    ...(state.userName  && { name:  state.userName  }),
+    kyc_form_started:      true,
+    kyc_current_step:      state.currentStep + 1,
+    kyc_current_step_name: getStepName(state.currentStep),
+    kyc_steps_completed:   state.completedSteps.size,
+    kyc_completion_pct:    Math.round((state.completedSteps.size / 4) * 100),
+    kyc_pan_verified:      state.panVerified    || false,
+    kyc_aadhaar_otp_sent:  state.aadhaarOTPSent || false,
+    kyc_last_active_at:    new Date().toISOString(),
+    ...(fd.pan_number         && { business_pan_number:         fd.pan_number }),
+    ...(fd.entity_name        && { business_entity_name:        fd.entity_name }),
+    ...(fd.business_type      && { business_type:               fd.business_type }),
+    ...(fd.gst_number         && { business_gst_number:         fd.gst_number }),
+    ...(fd.cin_number         && { business_cin_number:         fd.cin_number }),
+    ...(fd.registered_address && { business_registered_address: fd.registered_address }),
+    ...(fd.city               && { business_city:               fd.city }),
+    ...(fd.state              && { business_state:              fd.state }),
+    ...(fd.pincode            && { business_pincode:            fd.pincode }),
+    ...(fd.aadhaar_full_name  && { signatory_full_name:         fd.aadhaar_full_name }),
+    ...(fd.aadhaar_dob        && { signatory_dob:               fd.aadhaar_dob }),
+    ...(fd.total_shareholders && { total_shareholders:          fd.total_shareholders }),
+    ...(fd.date_of_incorporation && { date_of_incorporation:    fd.date_of_incorporation }),
+    ...(fd.director_1_name    && { director_1_name:             fd.director_1_name }),
+    ...(fd.director_1_designation && { director_1_designation:  fd.director_1_designation }),
+    ...(fd.director_1_shareholding_pct && { director_1_shareholding_pct: fd.director_1_shareholding_pct }),
+    ...(fd.director_1_is_ubo  && { director_1_is_ubo:           fd.director_1_is_ubo }),
+    ...(fd.director_2_name    && { director_2_name:             fd.director_2_name }),
+    ...(fd.director_2_designation && { director_2_designation:  fd.director_2_designation }),
+    ...(fd.director_2_shareholding_pct && { director_2_shareholding_pct: fd.director_2_shareholding_pct }),
+    ...(fd.director_2_is_ubo  && { director_2_is_ubo:           fd.director_2_is_ubo }),
+    ...(state.selectedBank    && { bank_name:                   state.selectedBank }),
+    ...(fd.bank_account_holder_name && { bank_account_holder_name: fd.bank_account_holder_name }),
+    ...(fd.bank_account_type  && { bank_account_type:           fd.bank_account_type }),
+    ...(fd.bank_ifsc_code     && { bank_ifsc_code:              fd.bank_ifsc_code }),
+  });
+}
+
+/* ────────────────────────────────────────────
+   PAN VERIFICATION
+──────────────────────────────────────────── */
+document.getElementById('pan-input').addEventListener('input', function() {
+  const valid = /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(this.value.toUpperCase());
+  document.getElementById('pan-verify-btn').disabled = !valid;
+  this.value = this.value.toUpperCase();
+  if (valid) document.getElementById('pan-hint').textContent = 'PAN format looks good. Click Verify.';
+  state.formData['pan_number'] = this.value;
+  updateSaveStatus();
+});
+
+function verifyPAN() {
+  const pan = document.getElementById('pan-input').value;
+  const btn = document.getElementById('pan-verify-btn');
+  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled  = true;
+
+  segTrack('PAN Verification Initiated', {
+    field_id: 'pan_number',
+    pan_type: pan[3] === 'P' ? 'individual' : 'company',
+  });
+
+  setTimeout(() => {
+    state.panVerified = true;
+    document.getElementById('pan-input').classList.add('success');
+    document.getElementById('entity-name').value = 'ACME TECHNOLOGIES PRIVATE LIMITED';
+    document.getElementById('entity-name').classList.add('success');
+    document.getElementById('entity-status').innerHTML = '<span style="color:var(--success)">✓ Verified</span>';
+    document.getElementById('pan-hint').textContent    = '✓ PAN verified successfully';
+    document.getElementById('pan-hint').style.color    = 'var(--success)';
+    btn.textContent      = '✓ Verified';
+    btn.style.background = 'var(--success)';
+    btn.disabled         = true;
+
+    segTrack('PAN Verification Completed', {
+      field_id:            'pan_number',
+      verification_status: 'success',
+      pan_type:            pan[3] === 'P' ? 'individual' : 'company',
+    });
+  }, 1800);
+}
+
+/* ────────────────────────────────────────────
+   GST VALIDATION
+──────────────────────────────────────────── */
+document.getElementById('gst-input').addEventListener('input', function() {
+  this.value = this.value.toUpperCase();
+  const valid  = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(this.value);
+  const status = document.getElementById('gst-status');
+  const hint   = document.getElementById('gst-hint');
+
+  if (this.value.length === 15) {
+    if (valid) {
+      this.classList.remove('error'); this.classList.add('success');
+      status.innerHTML = '<span style="color:var(--success)">✓</span>';
+      hint.textContent = '✓ Valid GST format';
+      hint.style.color = 'var(--success)';
+      if (!this._gstValidTracked) {
+        this._gstValidTracked = true;
+        segTrack('GST Number Validated', {
+          field_id: 'gst_number', validation_result: 'valid',
+          step_number: state.currentStep + 1, step_name: getStepName(state.currentStep),
+        });
+      }
+    } else {
+      this.classList.remove('success'); this.classList.add('error');
+      this._gstValidTracked = false;
+      status.innerHTML = '<span style="color:var(--error)">✗</span>';
+      hint.textContent = 'Invalid GST format. Check and re-enter.';
+      hint.style.color = 'var(--error)';
+      if (!this._gstInvalidTracked) {
+        this._gstInvalidTracked = true;
+        segTrack('GST Number Validation Failed', {
+          field_id: 'gst_number', validation_result: 'invalid', step_number: state.currentStep + 1,
+        });
+      }
+    }
+  } else {
+    this.classList.remove('error', 'success');
+    this._gstValidTracked = false; this._gstInvalidTracked = false;
+    status.innerHTML = ''; hint.textContent = '15-character GST identification number'; hint.style.color = '';
+  }
+  state.formData['gst_number'] = this.value;
+  updateSaveStatus();
+});
+
+/* ────────────────────────────────────────────
+   RADIO SELECTION
+──────────────────────────────────────────── */
+function selectRadio(fieldId, value, el) {
+  el.closest('.radio-group').querySelectorAll('.radio-option').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  state.formData[fieldId] = value;
+  const eventName = FIELD_EVENT_MAP[fieldId] || (fieldId.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' Selected');
+  segTrack(eventName, {
+    field_id: fieldId, selected_value: value,
+    step_number: state.currentStep + 1, step_name: getStepName(state.currentStep),
+  });
+}
+
+/* ────────────────────────────────────────────
+   FILE UPLOAD
+──────────────────────────────────────────── */
+const DOC_EVENT_MAP = {
+  'certificate_of_incorporation': 'Certificate of Incorporation Uploaded',
+  'address_proof':                'Address Proof Uploaded',
+  'aadhaar_front':                'Aadhaar Front Uploaded',
+  'aadhaar_back':                 'Aadhaar Back Uploaded',
+  'cancelled_cheque':             'Cancelled Cheque Uploaded',
+};
+
+function fileSelected(input, zoneId, fieldId) {
+  const file = input.files[0];
+  if (!file) return;
+  showFilePreview(zoneId, fieldId, file);
+}
+
+function showFilePreview(zoneId, fieldId, file) {
+  document.getElementById(zoneId).style.display = 'none';
+  const previewId = zoneId.replace('-zone', '-preview');
+  const preview   = document.getElementById(previewId);
+  if (preview) {
+    preview.style.display = 'flex';
+    preview.innerHTML = `<div class="upload-preview"><span>📎</span><span class="up-name">${file.name}</span><span class="up-size" style="color:var(--text-muted);font-size:0.75rem">${(file.size/1024).toFixed(1)} KB</span><button class="up-remove" onclick="removeFile('${zoneId}','${previewId}')">✕</button></div>`;
+  }
+  const docEventName = DOC_EVENT_MAP[fieldId] || (fieldId.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' Uploaded');
+  segTrack(docEventName, {
+    field_id: fieldId, file_type: file.type,
+    file_size_kb: Math.round(file.size / 1024),
+    step_number: state.currentStep + 1, step_name: getStepName(state.currentStep),
+  });
+}
+
+function removeFile(zoneId, previewId) {
+  document.getElementById(zoneId).style.display = 'block';
+  const el = document.getElementById(previewId);
+  if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+}
+
+function dragOver(event, zoneId)  { event.preventDefault(); document.getElementById(zoneId).classList.add('dragover'); }
+function dragLeave(zoneId)        { document.getElementById(zoneId).classList.remove('dragover'); }
+function dropFile(event, zoneId, fieldId) {
+  event.preventDefault(); dragLeave(zoneId);
+  const file = event.dataTransfer.files[0];
+  if (file) showFilePreview(zoneId, fieldId, file);
+}
+
+/* ────────────────────────────────────────────
+   AADHAAR OTP
+──────────────────────────────────────────── */
+function formatAadhaar(el) {
+  let val = el.value.replace(/\D/g, '').substring(0, 12);
+  val = val.replace(/(\d{4})(?=\d)/g, '$1 ');
+  el.value = val;
+  document.getElementById('aadhaar-otp-btn').disabled = val.replace(/\s/g,'').length !== 12;
+}
+
+function sendAadhaarOTP() {
+  const btn = document.getElementById('aadhaar-otp-btn');
+  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled  = true;
+
+  segTrack('Aadhaar OTP Requested', { field_id: 'aadhaar_number' });
+
+  setTimeout(() => {
+    state.aadhaarOTPSent = true;
+    document.getElementById('otp-section').style.display  = 'block';
+    document.getElementById('aadhaar-hint').textContent   = '✓ OTP sent to Aadhaar-linked mobile';
+    document.getElementById('aadhaar-hint').style.color   = 'var(--success)';
+    btn.textContent      = 'Resend OTP';
+    btn.disabled         = false;
+    btn.style.background = 'var(--success)';
+    document.querySelector('.otp-input').focus();
+    segTrack('Aadhaar OTP Sent', {});
+  }, 1500);
+}
+
+function otpMove(el, index) {
+  el.value = el.value.replace(/\D/g, '');
+  if (el.value && index < 5) document.querySelectorAll('.otp-input')[index + 1].focus();
+  const otp = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+  if (otp.length === 6 && !state._otpCompleteTracked) {
+    state._otpCompleteTracked = true;
+    segTrack('Aadhaar OTP Completed', {
+      field_id: 'aadhaar_otp', step_number: state.currentStep + 1, step_name: getStepName(state.currentStep),
+    });
+  }
+  if (otp.length < 6) state._otpCompleteTracked = false;
+}
+
+function otpBack(event, index) {
+  if (event.key === 'Backspace' && !event.target.value && index > 0) {
+    document.querySelectorAll('.otp-input')[index - 1].focus();
+  }
+}
+
+/* ────────────────────────────────────────────
+   DIRECTORS
+──────────────────────────────────────────── */
+let directorIndex = 0;
+
+function addDirector(isFirst = false) {
+  const i    = ++directorIndex;
+  const list = document.getElementById('director-list');
+  const card = document.createElement('div');
+  card.className = 'director-card';
+  card.id        = `director-card-${i}`;
+  card.innerHTML = `
+    <div class="director-card-header" onclick="toggleDirector(${i})">
+      <div class="dch-left">
+        <div class="dch-num">${i}</div>
+        <div class="dch-title" id="dir-title-${i}">Director / UBO ${i}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        ${i > 1 ? `<button class="remove-director" onclick="removeDirector(event,${i})">Remove</button>` : ''}
+        <span class="dch-toggle open" id="dch-toggle-${i}">▲</span>
+      </div>
+    </div>
+    <div class="director-card-body open" id="dir-body-${i}">
+      <div class="form-row cols-2">
+        <div class="field-group">
+          <label class="field-label">Full Name <span class="required">*</span></label>
+          <input type="text" class="field-input" placeholder="Full legal name"
+            oninput="onFieldInput('director_${i}_name', this); document.getElementById('dir-title-${i}').textContent = this.value || 'Director / UBO ${i}'"
+            onfocus="onFieldFocus('director_${i}_name', this)"
+            onblur="onFieldBlur('director_${i}_name', this)">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Designation <span class="required">*</span></label>
+          <select class="field-select"
+            onchange="onFieldInput('director_${i}_designation', this)"
+            onfocus="onFieldFocus('director_${i}_designation', this)"
+            onblur="onFieldBlur('director_${i}_designation', this)">
+            <option value="">Select role</option>
+            <option>Managing Director</option>
+            <option>Director</option>
+            <option>Whole Time Director</option>
+            <option>UBO</option>
+            <option>Authorized Signatory</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="field-group">
+          <label class="field-label">DIN / DPIN</label>
+          <input type="text" class="field-input" placeholder="00000000" maxlength="8"
+            oninput="onFieldInput('director_${i}_din', this)"
+            onfocus="onFieldFocus('director_${i}_din', this)"
+            onblur="onFieldBlur('director_${i}_din', this)">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Shareholding % <span class="required">*</span></label>
+          <input type="number" class="field-input" placeholder="e.g. 25" min="0" max="100"
+            oninput="onFieldInput('director_${i}_shareholding_pct', this)"
+            onfocus="onFieldFocus('director_${i}_shareholding_pct', this)"
+            onblur="onFieldBlur('director_${i}_shareholding_pct', this)">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Is UBO? (≥25%)</label>
+          <div class="radio-group inline">
+            <label class="radio-option" onclick="selectRadio('director_${i}_is_ubo', 'yes', this)">
+              <input type="radio" name="ubo_${i}" value="yes"><span class="ro-dot"></span><span class="ro-label">Yes</span>
+            </label>
+            <label class="radio-option" onclick="selectRadio('director_${i}_is_ubo', 'no', this)">
+              <input type="radio" name="ubo_${i}" value="no"><span class="ro-dot"></span><span class="ro-label">No</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="field-group">
+          <label class="field-label">PAN Number <span class="required">*</span></label>
+          <input type="text" class="field-input" placeholder="ABCDE1234F" maxlength="10"
+            oninput="onFieldInput('director_${i}_pan', this)"
+            onfocus="onFieldFocus('director_${i}_pan', this)"
+            onblur="onFieldBlur('director_${i}_pan', this)"
+            style="text-transform:uppercase;letter-spacing:0.06em;">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Aadhaar (last 4 digits)</label>
+          <input type="text" class="field-input" placeholder="XXXX" maxlength="4"
+            oninput="onFieldInput('director_${i}_aadhaar_last4', this)"
+            onfocus="onFieldFocus('director_${i}_aadhaar_last4', this)"
+            onblur="onFieldBlur('director_${i}_aadhaar_last4', this)">
+        </div>
+      </div>
+    </div>`;
+  list.appendChild(card);
+  if (!isFirst) {
+    segTrack('Director Added', { director_index: i, total_directors: i });
+  }
+}
+
+function toggleDirector(i) {
+  const body   = document.getElementById(`dir-body-${i}`);
+  const toggle = document.getElementById(`dch-toggle-${i}`);
+  const open   = body.classList.toggle('open');
+  toggle.classList.toggle('open', open);
+  toggle.textContent = open ? '▲' : '▼';
+}
+
+function removeDirector(event, i) {
+  event.stopPropagation();
+  document.getElementById(`director-card-${i}`).remove();
+  segTrack('Director Removed', { director_index: i });
+}
+
+addDirector(true);
+
+/* ────────────────────────────────────────────
+   BANK SELECTION
+──────────────────────────────────────────── */
+function selectBank(bankId, el) {
+  document.querySelectorAll('.bank-logo').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedBank = bankId;
+  segTrack('Bank Selected', { field_id: 'bank_name', selected_bank: bankId });
+}
+
+/* ────────────────────────────────────────────
+   IFSC LOOKUP
+──────────────────────────────────────────── */
+function onIFSCInput(el) {
+  el.value = el.value.toUpperCase();
+  onFieldInput('bank_ifsc_code', el);
+  document.getElementById('ifsc-verify-btn').disabled = el.value.length !== 11;
+}
+
+function verifyIFSC() {
+  const btn = document.getElementById('ifsc-verify-btn');
+  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled  = true;
+
+  segTrack('IFSC Lookup Initiated', { field_id: 'bank_ifsc_code' });
+
+  setTimeout(() => {
+    document.getElementById('branch-name').value      = 'Mumbai - Andheri East';
+    document.getElementById('ifsc-input').classList.add('success');
+    document.getElementById('ifsc-hint').textContent  = '✓ IFSC valid — HDFC Bank, Mumbai - Andheri East';
+    document.getElementById('ifsc-hint').style.color  = 'var(--success)';
+    btn.textContent      = '✓ Valid';
+    btn.style.background = 'var(--success)';
+    segTrack('IFSC Lookup Completed', {
+      field_id: 'bank_ifsc_code', verification_status: 'success', bank_name: 'HDFC Bank',
+    });
+  }, 1200);
+}
+
+/* ────────────────────────────────────────────
+   FINAL SUBMISSION
+──────────────────────────────────────────── */
+function submitKYC() {
+  const btn = event.target;
+  btn.innerHTML = '<span class="spinner dark"></span> Submitting...';
+  btn.disabled  = true;
+
+  const refId = 'MRC-2026-' + String(Math.floor(Math.random() * 90000) + 10000);
+  state.referenceId = refId;
+
+  segTrack('KYC Application Submitted', {
+    reference_id:          refId,
+    total_steps_completed: state.completedSteps.size,
+    pan_verified:          state.panVerified,
+    aadhaar_otp_sent:      state.aadhaarOTPSent,
+    bank_selected:         state.selectedBank,
+    business_type:         state.formData['business_type'] || null,
+    submission_timestamp:  new Date().toISOString(),
+  });
+
+  const fd = state.formData;
+  analytics.identify({
+    ...(state.userEmail && { email: state.userEmail }),
+    ...(state.userName  && { name:  state.userName  }),
+    kyc_submitted:        true,
+    kyc_reference_id:     refId,
+    kyc_submission_date:  new Date().toISOString(),
+    kyc_completion_pct:   100,
+    kyc_steps_completed:  4,
+    kyc_pan_verified:     state.panVerified    || false,
+    kyc_aadhaar_otp_sent: state.aadhaarOTPSent || false,
+    ...(fd.pan_number         && { business_pan_number:         fd.pan_number }),
+    ...(fd.entity_name        && { business_entity_name:        fd.entity_name }),
+    ...(fd.business_type      && { business_type:               fd.business_type }),
+    ...(fd.gst_number         && { business_gst_number:         fd.gst_number }),
+    ...(fd.cin_number         && { business_cin_number:         fd.cin_number }),
+    ...(fd.registered_address && { business_registered_address: fd.registered_address }),
+    ...(fd.city               && { business_city:               fd.city }),
+    ...(fd.state              && { business_state:              fd.state }),
+    ...(fd.pincode            && { business_pincode:            fd.pincode }),
+    ...(fd.aadhaar_full_name  && { signatory_full_name:         fd.aadhaar_full_name }),
+    ...(fd.aadhaar_dob        && { signatory_dob:               fd.aadhaar_dob }),
+    ...(fd.total_shareholders && { total_shareholders:          fd.total_shareholders }),
+    ...(fd.date_of_incorporation && { date_of_incorporation:    fd.date_of_incorporation }),
+    ...(fd.director_1_name    && { director_1_name:             fd.director_1_name }),
+    ...(fd.director_1_designation && { director_1_designation:  fd.director_1_designation }),
+    ...(fd.director_1_shareholding_pct && { director_1_shareholding_pct: fd.director_1_shareholding_pct }),
+    ...(fd.director_1_is_ubo  && { director_1_is_ubo:           fd.director_1_is_ubo }),
+    ...(fd.director_2_name    && { director_2_name:             fd.director_2_name }),
+    ...(fd.director_2_designation && { director_2_designation:  fd.director_2_designation }),
+    ...(fd.director_2_shareholding_pct && { director_2_shareholding_pct: fd.director_2_shareholding_pct }),
+    ...(fd.director_2_is_ubo  && { director_2_is_ubo:           fd.director_2_is_ubo }),
+    ...(state.selectedBank    && { bank_name:                   state.selectedBank }),
+    ...(fd.bank_account_holder_name && { bank_account_holder_name: fd.bank_account_holder_name }),
+    ...(fd.bank_account_type  && { bank_account_type:           fd.bank_account_type }),
+    ...(fd.bank_ifsc_code     && { bank_ifsc_code:              fd.bank_ifsc_code }),
+  });
+
+  setTimeout(() => {
+    state.completedSteps.add(3);
+    document.getElementById('ref-id').textContent = refId;
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step-4').classList.add('active');
+    document.getElementById('overall-pct').textContent = '100% complete';
+    document.querySelectorAll('.ps-bar').forEach(b => { b.classList.remove('active'); b.classList.add('done'); });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 2000);
+}
+</script>
+
+</body>
+</html>
+
+

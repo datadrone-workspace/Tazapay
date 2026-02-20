@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tazapay Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="#" class="logo">
+                    <svg width="140" height="32" viewBox="0 0 120 32" fill="none">
+                        <img src="img5.png">
+                    </svg>
+                </a>
+                
+                <div class="nav-menu">
+                    <div class="nav-item">
+                        <a href="#" class="nav-item">Products</a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-section">
+                                <h3>Our Products</h3>
+                                <div class="products-grid">
+                                    <div class="product-item">
+                                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Crect fill='%23f0f0f0' width='200' height='120'/%3E%3C/svg%3E" alt="Payment Gateway">
+                                        <h4>Payment Gateway</h4>
+                                        <p>Accept Payments from 173+ countries with no local entities</p>
+                                    </div>
+                                    <div class="product-item">
+                                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Crect fill='%23f0f0f0' width='200' height='120'/%3E%3C/svg%3E" alt="Global Collection Accounts">
+                                        <h4>Global Collection Accounts</h4>
+                                        <p>Collect, hold, and disburse funds like a local over in 35+ currencies</p>
+                                    </div>
+                                    <div class="product-item">
+                                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Crect fill='%23f0f0f0' width='200' height='120'/%3E%3C/svg%3E" alt="Payouts">
+                                        <h4>Payouts</h4>
+                                        <p>Simplify how you pay globally with same-day payouts in 80+ markets</p>
+                                    </div>
+                                </div>
+                                <h3>Features</h3>
+                                <div class="features-row">
+                                    <div class="feature-item">
+                                        <h4>Country & Payment Coverage</h4>
+                                        <p>Explore all available payment methods in countries worldwide.</p>
+                                    </div>
+                                    <div class="feature-item">
+                                        <h4>Buyer Protection</h4>
+                                        <p>Secure transactions, Comprehensive buyer protection</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="pricing.html" class="nav-item">Pricing</a>
+                    <div class="nav-item ">
+                        <a href="#"  class="nav-item">Solutions</a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-section">
+                                <h3 class="nav-item">Solutions</h3>
+                                <div class="simple-list">
+                                    <a href="#" class="list-item">
+                                        <h4>Travel</h4>
+                                        <p>Payment solutions for travel businesses</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>Online Gaming</h4>
+                                        <p>Secure payments for gaming platforms</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>eCommerce Platforms</h4>
+                                        <p>Complete payment infrastructure for marketplaces</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>Fintech</h4>
+                                        <p>Embedded payments for fintech companies</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>SaaS Platform</h4>
+                                        <p>Global billing for SaaS businesses</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>Digital Products</h4>
+                                        <p>Payments for digital goods and services</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nav-item ">
+                        <a href="#" class="nav-item">Resources </a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-section">
+                                <h3>Resources</h3>
+                                <div class="simple-list">
+                                    <a href="#" class="list-item">
+                                        <h4>FAQ</h4>
+                                        <p>Frequently asked questions</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>Case Studies</h4>
+                                        <p>Success stories from our clients</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>Blogs</h4>
+                                        <p>Latest insights and updates</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>Guides</h4>
+                                        <p>Comprehensive guides and documentation</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nav-item ">
+                        <a href="#" class="nav-item">Developer</a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-section">
+                                <h3>Developer</h3>
+                                <div class="simple-list">
+                                    <a href="#" class="list-item">
+                                        <h4>API Documentation</h4>
+                                        <p>Complete API reference and guides</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>Integration Guides</h4>
+                                        <p>Step-by-step integration tutorials</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>SDKs & Libraries</h4>
+                                        <p>Official SDKs for multiple languages</p>
+                                    </a>
+                                    <a href="#" class="list-item">
+                                        <h4>API Status</h4>
+                                        <p>Real-time API status and uptime</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <a href="login.html" class="btn-login">Login</a>
+                    <a href="#" class="btn-contact">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <!-- Badges -->
+            <div class="badges">
+                <div class="badge">
+                    <img src="ach1.jpg" width="40px" height="40px" alt="CNBC">
+                    <div class="badge-text">
+                        <div class="badge-title">CNBC Recognition</div>
+                        <div class="badge-sub">World's Top Fintechs 2025</div>
+                    </div>
+                </div>
+                <div class="badge">
+                    <img src="ach2.png" width="40px" height="40px" alt="CNBC">
+                    <div class="badge-text">
+                        <div class="badge-title">CB INSIGHTS</div>
+                        <div class="badge-sub">Top 100 Fintechs</div>
+                    </div>
+                </div>
+                <div class="badge">
+                   <img src="ach3.png" width="40px" height="40px" alt="CNBC">
+                    <div class="badge-text">
+                        <div class="badge-title">4.1 ⭐ Rating</div>
+                        <div class="badge-sub">on G2.com</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h1 class="hero-title">
+                Global <span class="highlight-blue">money</span> <span class="highlight-teal">movement</span>,<br>
+                made simple.
+            </h1>
+            
+            <p class="hero-subtitle">
+                Accept, hold, convert, and payout in 100+ currencies<br>
+                using modern rails, all on one unified platform.
+            </p>
+            
+            <p class="hero-description">
+                Power global payments without local entities or multiple integrations.
+            </p>
+            
+            <a
+              href="onboarding-step1.html"
+              class="btn-get-started"
+              id="start-onboarding"
+              data-event="onboarding_started"
+              data-source="homepage_hero">
+              Get Started →
+            </a>
+
+            
+            <!-- Country Flags Animation -->
+            <div class="flags-container">
+                <div class="flag-circle" style="left: 20%; top: 20%;">🇨🇳</div>
+                <div class="flag-circle" style="left: 35%; top: 50%;">🇧🇷</div>
+                <div class="flag-circle" style="left: 50%; top: 30%;">🇦🇪</div>
+                <div class="flag-circle" style="left: 65%; top: 50%;">🇸🇬</div>
+                <div class="flag-circle" style="right: 15%; top: 35%;">🇦🇺</div>
+                <svg class="connection-lines" viewBox="0 0 800 200">
+                    <path d="M 160 40 Q 280 100 400 60" stroke="#00D4AA" stroke-width="2" fill="none" opacity="0.3"/>
+                    <path d="M 280 100 Q 400 60 520 100" stroke="#00D4AA" stroke-width="2" fill="none" opacity="0.3"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By Section -->
+    <section class="trusted-by">
+        <div class="container">
+            <p class="section-label">TRUSTED BY</p>
+            <div class="company-logos">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Ctext x='10' y='25' font-size='16' fill='%23999'%3ETeachmint%3C/text%3E%3C/svg%3E" alt="Teachmint">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Ctext x='10' y='25' font-size='16' fill='%23999'%3ECULTURE%3C/text%3E%3C/svg%3E" alt="Culture">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Ctext x='10' y='25' font-size='16' fill='%23999'%3EGLOBALTIX%3C/text%3E%3C/svg%3E" alt="GlobalTix">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Ctext x='10' y='25' font-size='16' fill='%23999'%3EZenGroup%3C/text%3E%3C/svg%3E" alt="ZenGroup">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Ctext x='10' y='25' font-size='16' fill='%23999'%3EDREAMSETGO%3C/text%3E%3C/svg%3E" alt="DreamSetGo">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Ctext x='10' y='25' font-size='16' fill='%23999'%3EGTRiP%3C/text%3E%3C/svg%3E" alt="GTRiP">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Ctext x='10' y='25' font-size='16' fill='%23999'%3Erezlive%3C/text%3E%3C/svg%3E" alt="rezlive">
+            </div>
+        </div>
+    </section>
+
+    <!-- Stablecoin Bridge Section -->
+    <section class="stablecoin-section">
+        <div class="container">
+            <h2 class="section-title">The bridge between Stablecoins and global Fiat currencies</h2>
+            <p class="section-subtitle">Fully compliant global interoperability built for always-on money movement</p>
+            
+            <div class="features-grid-two">
+                <div class="feature-box">
+                    <h3>One Platform for Everything</h3>
+                    <p>Effortlessly manage stablecoin and fiat payments on a single, unified account that unifies your global cash flows.</p>
+                </div>
+                <div class="feature-box">
+                    <h3>Receive Stablecoins, Settle Fiat Instantly</h3>
+                    <p>Receive USDC and USDT from your business clients and convert them to fiat for instant bank settlements globally.</p>
+                </div>
+            </div>
+            
+            <div class="demo-cards">
+                <div class="demo-card">
+                    <div class="card-content">
+                        <p class="card-label">Optimize your treasury with stablecoins</p>
+                        <p class="card-description">Optimize your treasury with stablecoins. Effortlessly onramp funds, transfer globally, and convert to local fiat instantly.</p>
+                        <div class="conversion-demo">
+                            <div class="conversion-box">
+                                <p>Balance Conversion <span class="amount-badge">128,789 available</span></p>
+                                <div class="conversion-input">
+                                    <div class="currency-select">
+                                        <span class="currency-icon">💲</span> USDT
+                                    </div>
+                                    <div class="amount">10,000</div>
+                                </div>
+                                <div class="conversion-arrow">↓</div>
+                                <div class="conversion-input">
+                                    <div class="currency-select">
+                                        <span class="flag">🇺🇸</span> USD
+                                    </div>
+                                    <div class="amount">$ 10,000.00</div>
+                                </div>
+                                <div class="status-badges">
+                                    <span class="badge-green">✓ On Ramp</span>
+                                    <span class="badge-green">✓ Off Ramp</span>
+                                </div>
+                            </div>
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23f5f5f5' width='300' height='200'/%3E%3C/svg%3E" alt="Person" class="person-image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-card">
+                    <div class="card-content">
+                        <p class="card-label">Fund your transactions convert to fiat</p>
+                        <p class="card-description">Leverage stablecoins to fund your transactions, convert to fiat instantly and pay vendors and suppliers worldwide in 100+ currencies, without maintaining fiat balances.</p>
+                        <div class="payout-demo">
+                            <div class="payout-box">
+                                <div class="badges-top">
+                                    <span class="badge-green">✓ 24/7 Access</span>
+                                    <span class="badge-green">✓ Real-time</span>
+                                    <span class="badge-green">✓ Low fees</span>
+                                </div>
+                                <p class="payout-label">Payout To</p>
+                                <div class="payout-recipient">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23ccc'/%3E%3C/svg%3E" alt="Profile" class="profile-pic">
+                                    <div>
+                                        <p class="name">Robert Brazeal</p>
+                                        <p class="wallet">💲 USDT -Ethereum<br>0x123456789abcdef123456789a...</p>
+                                    </div>
+                                </div>
+                                <p class="payout-from">Make payout from</p>
+                                <div class="currency-options">
+                                    <label class="currency-option selected">
+                                        <input type="radio" name="currency" checked>
+                                        <span class="flag">🇺🇸</span> USD
+                                    </label>
+                                    <label class="currency-option">
+                                        <input type="radio" name="currency">
+                                        <span class="flag">🇮🇳</span> INR
+                                    </label>
+                                    <label class="currency-option">
+                                        <input type="radio" name="currency">
+                                        <span class="flag">🇲🇾</span> MYR
+                                    </label>
+                                </div>
+                                <div class="payout-amount">
+                                    <p>PAYOUT AMOUNT</p>
+                                    <p class="amount-large">Amount $ 7,625.00</p>
+                                    <button class="btn-submit">→</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="disclaimer">Stablecoin services are provided by Tazapay Canada Corp., a registered Money Services Business (MSB) under FINTRAC-CANAFE (Registration number M21439799). Our stablecoin services are limited to facilitating payments and conversions(onramp/offramp). Tazapay does not provide financial, investment, or advisory services related to Stablecoins.</p>
+            
+            <a href="#" class="btn-learn-more">Learn More →</a>
+        </div>
+    </section>
+
+    <!-- Global Money Movement Section -->
+    <section class="global-movement">
+        <div class="container">
+            <h2 class="section-title-white">Global Money Movement, Reimagined for the Modern Era</h2>
+            <p class="section-subtitle-white">Built on modern local rails and compliant infrastructure to move money anywhere, anytime.</p>
+            
+            <a href="#" class="btn-learn-white">Learn More →</a>
+            
+            <div class="payment-methods-grid">
+                <div class="payment-method-card">
+                    <h3>Local Payment Methods</h3>
+                    <ul>
+                        <li>Available in 100+ countries</li>
+                        <li>Zero chargebacks</li>
+                    </ul>
+                    <div class="method-example">
+                        <p>Scan QR</p>
+                        <div class="qr-code">
+                            <p>Alipay</p>
+                            <div class="qr-placeholder">QR CODE</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-method-card">
+                    <h3>Credit Cards</h3>
+                    <ul>
+                        <li>Available in 170+ countries</li>
+                        <li>Optimized for cross-border success rates</li>
+                    </ul>
+                    <div class="card-example">
+                        <p>Cards 💳 <span class="card-amount">€ 1,000</span></p>
+                        <p>Cardholder's Name</p>
+                        <p class="cardholder-name">Kelly Cheong</p>
+                        <p class="card-number">4119-xxxx-xxxx <span class="card-logos">VISA Mastercard</span></p>
+                    </div>
+                </div>
+                
+                <div class="payment-method-card">
+                    <h3>Global Business Account</h3>
+                </div>
+                
+                <div class="payment-method-card">
+                    <h3>Payouts</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries Section -->
+    <section class="industries">
+        <div class="container">
+            <h2 class="section-title">Across Industries, Across Borders</h2>
+            <p class="section-subtitle">Tailored for diversity, Tazapay bridges payment gaps in sectors ranging from travel to SaaS.<br>Our solutions resonate with your industry's specific needs, ensuring global transactional ease.</p>
+            
+            <div class="industry-cards">
+                <div class="industry-card orange">
+                    <h3>Travel</h3>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ff9966' width='400' height='300'/%3E%3C/svg%3E" alt="Travel">
+                </div>
+                <div class="industry-card purple">
+                    <h3>Online Gaming →</h3>
+                    <div class="industry-details">
+                        <p>Developers & Publishers</p>
+                        <p>Distributors & Resellers</p>
+                        <p>Marketplaces</p>
+                    </div>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%236a4c93' width='400' height='300'/%3E%3C/svg%3E" alt="Gaming">
+                </div>
+                <div class="industry-card gray">
+                    <h3>E-Commerce →</h3>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23666' width='400' height='300'/%3E%3C/svg%3E" alt="E-Commerce">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investors Section -->
+    <section class="investors">
+        <div class="container">
+            <div class="investor-logos">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Ctext x='10' y='35' font-size='16' fill='%23666'%3Epeak xv%3C/text%3E%3C/svg%3E" alt="Peak XV">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Ctext x='10' y='35' font-size='16' fill='%23666'%3ECIRCLE VENTURES%3C/text%3E%3C/svg%3E" alt="Circle Ventures">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Ctext x='10' y='35' font-size='16' fill='%23666'%3Eripple%3C/text%3E%3C/svg%3E" alt="Ripple">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Ctext x='10' y='35' font-size='16' fill='%23666'%3ENORIN CHUKIN%3C/text%3E%3C/svg%3E" alt="Norin Chukin">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Ctext x='10' y='35' font-size='16' fill='%23666'%3EGMO VENTURE%3C/text%3E%3C/svg%3E" alt="GMO Venture">
+            </div>
+            <div class="investor-logos-row2">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='50'%3E%3Ctext x='10' y='30' font-size='14' fill='%23666'%3EJanuary Capital%3C/text%3E%3C/svg%3E" alt="January Capital">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='50'%3E%3Ctext x='10' y='30' font-size='14' fill='%23666'%3EArc180%3C/text%3E%3C/svg%3E" alt="Arc180">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='50'%3E%3Ctext x='10' y='30' font-size='14' fill='%23666'%3Eftp global%3C/text%3E%3C/svg%3E" alt="ftp global">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='50'%3E%3Ctext x='10' y='30' font-size='14' fill='%23666'%3ESAISON CAPITAL%3C/text%3E%3C/svg%3E" alt="Saison Capital">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='50'%3E%3Ctext x='10' y='30' font-size='14' fill='%23666'%3EPayPal%3C/text%3E%3C/svg%3E" alt="PayPal">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='50'%3E%3Ctext x='10' y='30' font-size='14' fill='%23666'%3EFOUNDAMENTAL%3C/text%3E%3C/svg%3E" alt="Foundamental">
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <h2 class="section-title-white">Trusted by Businesses Worldwide</h2>
+            <p class="section-subtitle-white">Discover stories from our clients about how we've enhanced their experience and that of their<br>customers. These testimonials reflect our dedication to exceptional service and shared satisfaction.</p>
+            
+            <div class="testimonial-cards">
+                <div class="testimonial-card">
+                    <div class="company-logo">asanify</div>
+                    <p class="testimonial-text">FX Transactions are sensitive and we always need assurance that the payment partner is process-driven and has great customer support. With Tazapay, we have been working for over a year now and our payment processing has been seamless. I find Tazapay to be top-notch. Assured FX Txns, Great customer support!</p>
+                    <div class="testimonial-author">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Ccircle cx='25' cy='25' r='25' fill='%23ccc'/%3E%3C/svg%3E" alt="Gaurav">
+                        <div>
+                            <p class="author-name">Gaurav Prasad</p>
+                            <p class="author-title">CoFounder & COO, Asanify</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card with-image">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='400'%3E%3Crect fill='%23f0f0f0' width='500' height='400'/%3E%3C/svg%3E" alt="Team" class="testimonial-bg">
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="company-logo">Photobook Worldwide</div>
+                    <p class="testimonial-text">Great job! We started working with Tazapay about 3 months and the team is outstanding, especially KC, who is super responsive. They are also innovating extremely fast and I cant wait to see more new features and services from them!</p>
+                    <div class="testimonial-author">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Ccircle cx='25' cy='25' r='25' fill='%23ccc'/%3E%3C/svg%3E" alt="Wee Jonn">
+                        <div>
+                            <p class="author-name">Wee Jonn Leow</p>
+                            <p class="author-title">CEO, Photobook</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Efficiency Section -->
+    <section class="efficiency">
+        <div class="container">
+            <h2 class="section-title">Efficiency in Every Transaction</h2>
+            <p class="section-subtitle">Tazapay delivers robust protection for your cross-border payments, ensuring compliance,<br>chargeback management and fraud protection.</p>
+            
+            <div class="efficiency-features">
+                <div class="efficiency-card">
+                    <div class="icon-orange">📋</div>
+                    <h3>Simplified Global Compliance</h3>
+                    <p>Adhere to global & local standards effortlessly. We handle the complexities, enabling borderless business operations.</p>
+                    <div class="compliance-visual">
+                        <div class="compliance-check">
+                            <span class="shield-icon">🛡️</span>
+                            <div class="check-items">
+                                <div class="check-item">
+                                    <p>Global KYB & AML</p>
+                                    <p class="check-status">Scanning 220 databases...</p>
+                                </div>
+                                <div class="check-item">
+                                    <p>Sanction Screening checks</p>
+                                    <p class="check-status">Scanning local watchlist...</p>
+                                </div>
+                                <span class="check-complete">✓</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="efficiency-placeholder">
+                    <!-- Additional efficiency features would go here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <svg width="140" height="32" viewBox="0 0 120 32" fill="none">
+                            <text x="0" y="24" font-family="Arial, sans-serif" font-size="24" font-weight="600">
+                                <tspan fill="#0A4D4D">Data</tspan>
+                                <tspan fill="#00D4AA">Drone</tspan>
+                                <tspan fill="#0A4D4D"></tspan>
+                            </text>
+                        </svg>
+                    </div>
+                    <p class="security-text">Security Standard with</p>
+                    <div class="pci-badge">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40'%3E%3Ctext x='5' y='25' font-size='14' fill='%23666'%3EPCI DSS%3C/text%3E%3C/svg%3E" alt="PCI DSS">
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="#">Payment Gateway</a></li>
+                        <li><a href="#">Global Business Account</a></li>
+                        <li><a href="#">Payouts</a></li>
+                        <li><a href="#">Escrow</a></li>
+                        <li><a href="#">Country & Payment Coverage</a></li>
+                        <li><a href="#">Buyer Protection</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Solutions</h4>
+                    <ul>
+                        <li><a href="#">Travel</a></li>
+                        <li><a href="#">Online Gaming</a></li>
+                        <li><a href="#">eCommerce Platforms</a></li>
+                        <li><a href="#">Fintech</a></li>
+                        <li><a href="#">Saas Platform</a></li>
+                        <li><a href="#">Digital Products</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="debug.html">Case Studies</a></li>
+                        <li><a href="#">Blogs</a></li>
+                        <li><a href="#">Guides</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers <span class="hiring-badge">We're HIRING</span></a></li>
+                        <li><a href="#">Licenses</a></li>
+                        <li><a href="#">Responsible Disclosure</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2026 Tazapay. All right reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                <div class="social-icons">
+                    <a href="#">f</a>
+                    <a href="#">in</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+<script>
+  !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="suzg9Ck5EW9xT65CXpm456ObsF3r3K31";;analytics.SNIPPET_VERSION="5.2.0";
+  analytics.load("suzg9Ck5EW9xT65CXpm456ObsF3r3K31");
+  analytics.page("Homepage", {
+            page_name: "Datadrone Homepage",
+            page_type: "landing_page"
+        });
+        }}();
+        // Industry card hover effect
+document.querySelectorAll('.industry-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.05)';
+        this.style.transition = 'transform 0.3s ease';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+    });
+});
+
+// Console message
+console.log('%cDatadronePay Website', 'font-size: 20px; font-weight: bold; color: #00D4AA;');
+console.log('%cBuilt with HTML, CSS, and JavaScript', 'font-size: 14px; color: #0A4D4D;');
+console.log('%c💚 DataDrone Pay', 'font-size: 12px; color: #00D4AA;');
+
+// Loading animation
+window.addEventListener('load', () => {
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    }, 100);
+});
+</script>
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segment Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        button {
+            background: #0066FF;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0052CC;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-box">
+        <h1>🔍 Segment Debug Tool</h1>
+        <p>This page will help you diagnose Segment integration issues.</p>
+    </div>
+
+    <div class="debug-box">
+        <h2>1. Segment Status</h2>
+        <div id="segmentStatus"></div>
+    </div>
+
+    <div class="debug-box">
+        <h2>2. Test Segment Calls</h2>
+        <button onclick="testPage()">Test Page Call</button>
+        <button onclick="testTrack()">Test Track Call</button>
+        <button onclick="testIdentify()">Test Identify Call</button>
+        <div id="testResults"></div>
+    </div>
+
+    <div class="debug-box">
+        <h2>3. Console Logs</h2>
+        <div id="consoleLogs"></div>
+    </div>
+
+    <!-- Twilio Segment Analytics -->
+    <script>
+        !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey="YOUR_SEGMENT_WRITE_KEY";;analytics.SNIPPET_VERSION="4.15.3";
+        analytics.load("YOUR_SEGMENT_WRITE_KEY");
+        analytics.page();
+        }}();
+    </script>
+
+    <script>
+        const statusDiv = document.getElementById('segmentStatus');
+        const resultsDiv = document.getElementById('testResults');
+        const logsDiv = document.getElementById('consoleLogs');
+        
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logsDiv.innerHTML += `<div class="status">${args.join(' ')}</div>`;
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            logsDiv.innerHTML += `<div class="status error">ERROR: ${args.join(' ')}</div>`;
+        };
+        
+        // Check Segment status
+        function checkSegmentStatus() {
+            let html = '';
+            
+            // Check if analytics object exists
+            if (typeof window.analytics !== 'undefined') {
+                html += '<div class="status success">✓ Analytics object exists</div>';
+            } else {
+                html += '<div class="status error">✗ Analytics object NOT found</div>';
+                statusDiv.innerHTML = html;
+                return;
+            }
+            
+            // Check if Segment is loaded
+            if (window.analytics.initialized) {
+                html += '<div class="status success">✓ Segment initialized</div>';
+            } else {
+                html += '<div class="status warning">⚠ Segment not yet initialized (loading...)</div>';
+            }
+            
+            // Check write key
+            if (window.analytics._writeKey) {
+                if (window.analytics._writeKey === 'YOUR_SEGMENT_WRITE_KEY') {
+                    html += '<div class="status error">✗ Write key is placeholder! Update YOUR_SEGMENT_WRITE_KEY with your actual key</div>';
+                } else {
+                    html += `<div class="status success">✓ Write key set: ${window.analytics._writeKey.substring(0, 10)}...</div>`;
+                }
+            } else {
+                html += '<div class="status error">✗ No write key found</div>';
+            }
+            
+            // Check methods
+            if (typeof window.analytics.track === 'function') {
+                html += '<div class="status success">✓ track() method available</div>';
+            } else {
+                html += '<div class="status error">✗ track() method NOT available</div>';
+            }
+            
+            if (typeof window.analytics.identify === 'function') {
+                html += '<div class="status success">✓ identify() method available</div>';
+            } else {
+                html += '<div class="status error">✗ identify() method NOT available</div>';
+            }
+            
+            statusDiv.innerHTML = html;
+        }
+        
+        // Test functions
+        function testPage() {
+            resultsDiv.innerHTML = '<div class="status">Testing page call...</div>';
+            try {
+                analytics.page('Debug Test Page', {
+                    test: true,
+                    timestamp: new Date().toISOString()
+                });
+                resultsDiv.innerHTML += '<div class="status success">✓ Page call sent!</div>';
+            } catch (error) {
+                resultsDiv.innerHTML += `<div class="status error">✗ Page call failed: ${error.message}</div>`;
+            }
+        }
+        
+        function testTrack() {
+            resultsDiv.innerHTML = '<div class="status">Testing track call...</div>';
+            try {
+                analytics.track('Debug Test Event', {
+                    test: true,
+                    timestamp: new Date().toISOString()
+                });
+                resultsDiv.innerHTML += '<div class="status success">✓ Track call sent!</div>';
+            } catch (error) {
+                resultsDiv.innerHTML += `<div class="status error">✗ Track call failed: ${error.message}</div>`;
+            }
+        }
+        
+        function testIdentify() {
+            resultsDiv.innerHTML = '<div class="status">Testing identify call...</div>';
+            try {
+                const testEmail = 'debug-test@example.com';
+                analytics.identify(testEmail, {
+                    email: testEmail,
+                    name: 'Debug Test User',
+                    test: true,
+                    timestamp: new Date().toISOString()
+                });
+                resultsDiv.innerHTML += `<div class="status success">✓ Identify call sent for ${testEmail}!</div>`;
+                resultsDiv.innerHTML += `<div class="status">Check Segment debugger for this user.</div>`;
+            } catch (error) {
+                resultsDiv.innerHTML += `<div class="status error">✗ Identify call failed: ${error.message}</div>`;
+            }
+        }
+        
+        // Wait for Segment to load, then check status
+        setTimeout(function() {
+            checkSegmentStatus();
+            console.log('Segment debug check completed');
+        }, 2000);
+        
+        // Also check on ready
+        if (window.analytics && typeof window.analytics.ready === 'function') {
+            analytics.ready(function() {
+                console.log('Segment ready callback fired');
+                setTimeout(checkSegmentStatus, 500);
+            });
+        }
+    </script>
+</body>
+</html>
