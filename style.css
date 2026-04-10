@@ -5,8 +5,8 @@
 }
 
 :root {
-    --teal: #00D4AA;
-    --dark-teal: #0A4D4D;
+    --teal: #000000;
+    --dark-teal: #313737;
     --light-teal: #E8F8F5;
     --gray-bg: #F5F7FA;
     --text-dark: #1A1D21;
@@ -165,7 +165,7 @@ body {
 }
 
 .back-btn {
-  background-color: #0f5a52;   /* dark teal */
+  background-color: #000000;   /* dark teal */
   color: #ffffff;
   border: none;
   padding: 18px 0;
@@ -181,7 +181,7 @@ body {
 }
 
 .back-btn:hover {
-  background-color: #0c4a44;
+  background-color: #313737;
 }
 
 .back-btn:active {
@@ -257,7 +257,7 @@ body {
 }
 
 .btn-contact:hover {
-    background: #08393C;
+    background: #313737;
     transform: translateY(-1px);
 }
 
